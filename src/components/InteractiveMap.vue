@@ -13,6 +13,14 @@ const userLocation = ref(null);
 const marker = ref(null);
 const store = useMainStore();
 
+const customIcon = L.icon({
+    iconUrl: '../assets/images/marker.svg',
+    iconSize: [32, 32], // размер иконки
+    iconAnchor: [16, 32], // точка, от которой будет размещаться маркер
+    popupAnchor: [0, -32] // смещение для всплывающего окна
+});
+
+
 
 onMounted(() => {
     initMap();
@@ -23,7 +31,7 @@ onMounted(() => {
                 if (marker.value) {
                     map.value.removeLayer(marker.value);
                 }
-                marker.value = L.marker([store.savedLat, store.savedLon]).addTo(map.value);
+                marker.value = L.marker([store.savedLat, store.savedLon], { icon: customIcon }).addTo(map.value);
                 store.savedLat = 0;
                 store.savedLon = 0;
             }
@@ -69,7 +77,7 @@ const initMapWithLocation = async () => {
             if (marker.value) {
                 map.value.removeLayer(marker.value);
             }
-            marker.value = L.marker(e.latlng).addTo(map.value);
+            marker.value = L.marker(e.latlng, { icon: customIcon }).addTo(map.value);
             console.log(e.latlng)
             store.getWeatherData(e.latlng.lat, e.latlng.lng);
             console.log(`Clicked at: ${e.latlng.lat}, ${e.latlng.lng}`);
