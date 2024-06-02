@@ -6,6 +6,7 @@
 import { ref, onMounted, nextTick, watch } from 'vue';
 import L from 'leaflet';
 import { useMainStore } from '../store/modules/MainStore.ts';
+import markerImg from '../assets/images/marker.svg';
 
 const mapContainer = ref(null);
 const map = ref(null);
@@ -14,7 +15,7 @@ const marker = ref(null);
 const store = useMainStore();
 
 const customIcon = L.icon({
-    iconUrl: '../assets/images/marker.svg',
+    iconUrl: markerImg,
     iconSize: [32, 32], // размер иконки
     iconAnchor: [16, 32], // точка, от которой будет размещаться маркер
     popupAnchor: [0, -32] // смещение для всплывающего окна
