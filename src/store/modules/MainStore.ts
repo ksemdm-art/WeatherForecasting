@@ -5,24 +5,24 @@ import { fetchWeatherApi } from "openmeteo";
 interface WeatherData {
   current: {
     time: string;
-    temperature2m: number | null;
-    relativeHumidity2m: number | null;
-    precipitation: number | null;
-    cloudCover: number | null;
-    pressureMsl: number | null;
-    windSpeed10m: number | null;
-    windDirection10m: number | null;
+    temperature2m: number | null | undefined;
+    relativeHumidity2m: number | null |  undefined;
+    precipitation: number | null | undefined;
+    cloudCover: number | null | undefined;
+    pressureMsl: number | null | undefined;
+    windSpeed10m: number | null | undefined;
+    windDirection10m: number | null | undefined;
   };
   hourly: {
     time: string[];
-    temperature2m: number[];
-    relativeHumidity2m: number[];
-    precipitationProbability: number[];
-    precipitation: number[];
-    pressureMsl: number[];
-    cloudCover: number[];
-    windSpeed10m: number[];
-    windDirection10m: number[];
+    temperature2m: number[] | null | undefined | Float32Array;
+    relativeHumidity2m: number[] | null |  undefined | Float32Array;
+    precipitationProbability: number[] | null | undefined | Float32Array;
+    precipitation: number[] | null | undefined | Float32Array;
+    pressureMsl: number[] | null | undefined | Float32Array;
+    cloudCover: number[] | null | undefined | Float32Array;
+    windSpeed10m: number[] | null | undefined | Float32Array;
+    windDirection10m: number[] | null | undefined | Float32Array;
   };
 }
 
@@ -30,10 +30,10 @@ interface GroupedData {
   [key: string]: {
     hourly: {
       time: string[];
-      temperature2m: number[];
-      relativeHumidity2m: number[];
+      temperature2m: number[] ;
+      relativeHumidity2m: number[] ;
       precipitationProbability: number[];
-      precipitation: number[];
+      precipitation: number[] ;
       pressureMsl: number[];
       cloudCover: number[];
       windSpeed10m: number[];
@@ -165,13 +165,13 @@ export const useMainStore = defineStore("main", {
             time: moment(new Date(Number(current.time()) * 1000)).format(
               "DD/MM/YYYY HH:mm"
             ),
-            temperature2m: current.variables(0)?.value().toFixed(2),
-            relativeHumidity2m: current.variables(1)?.value().toFixed(2),
-            precipitation: current.variables(2)?.value().toFixed(2),
-            cloudCover: current.variables(3)?.value().toFixed(2),
-            pressureMsl: current.variables(4)?.value().toFixed(2),
-            windSpeed10m: current.variables(5)?.value().toFixed(2),
-            windDirection10m: current.variables(6)?.value().toFixed(2),
+            temperature2m: current.variables(0)?.value(),
+            relativeHumidity2m: current.variables(1)?.value(),
+            precipitation: current.variables(2)?.value(),
+            cloudCover: current.variables(3)?.value(),
+            pressureMsl: current.variables(4)?.value(),
+            windSpeed10m: current.variables(5)?.value(),
+            windDirection10m: current.variables(6)?.value(),
           },
           hourly: {
             time: range(
@@ -192,7 +192,8 @@ export const useMainStore = defineStore("main", {
           },
         };
 
-        this.groupedData = this.weatherData.hourly.time.reduce((acc, time) => {
+        this.groupedData = this.weatherData.hourly?.time?.reduce((acc, time) => {
+          if (!time) return acc;
           const date = time.split(" ")[0];
           if (!acc[date]) {
             acc[date] = {
@@ -209,32 +210,34 @@ export const useMainStore = defineStore("main", {
               },
             };
           }
-          const index = this.weatherData.hourly.time.indexOf(time);
-          acc[date].hourly.time.push(time);
-          acc[date].hourly.temperature2m.push(
-            this.weatherData.hourly.temperature2m[index].toFixed(2)
-          );
-          acc[date].hourly.relativeHumidity2m.push(
-            this.weatherData.hourly.relativeHumidity2m[index].toFixed(2)
-          );
-          acc[date].hourly.precipitationProbability.push(
-            this.weatherData.hourly.precipitationProbability[index].toFixed(2)
-          );
-          acc[date].hourly.precipitation.push(
-            this.weatherData.hourly.precipitation[index].toFixed(2)
-          );
-          acc[date].hourly.pressureMsl.push(
-            this.weatherData.hourly.pressureMsl[index].toFixed(2)
-          );
-          acc[date].hourly.cloudCover.push(
-            this.weatherData.hourly.cloudCover[index].toFixed(2)
-          );
-          acc[date].hourly.windSpeed10m.push(
-            this.weatherData.hourly.windSpeed10m[index].toFixed(2)
-          );
-          acc[date].hourly.windDirection10m.push(
-            this.weatherData.hourly.windDirection10m[index].toFixed(2)
-          );
+          const index = this.weatherData.hourly.time?.indexOf(time);
+          if (index !== undefined && index !== -1) {
+            acc[date].hourly.time.push(time);
+            acc[date].hourly.temperature2m.push(
+              this.weatherData.hourly.temperature2m?.[index] ?? 0
+            );
+            acc[date].hourly.relativeHumidity2m.push(
+              this.weatherData.hourly.relativeHumidity2m?.[index] ?? 0
+            );
+            acc[date].hourly.precipitationProbability.push(
+              this.weatherData.hourly.precipitationProbability?.[index] ?? 0
+            );
+            acc[date].hourly.precipitation.push(
+              this.weatherData.hourly.precipitation?.[index] ?? 0
+            );
+            acc[date].hourly.pressureMsl.push(
+              this.weatherData.hourly.pressureMsl?.[index] ?? 0
+            );
+            acc[date].hourly.cloudCover.push(
+              this.weatherData.hourly.cloudCover?.[index] ?? 0
+            );
+            acc[date].hourly.windSpeed10m.push(
+              this.weatherData.hourly.windSpeed10m?.[index] ?? 0
+            );
+            acc[date].hourly.windDirection10m.push(
+              this.weatherData.hourly.windDirection10m?.[index] ?? 0
+            );
+          }
           return acc;
         }, {} as GroupedData);
       });

@@ -10,32 +10,32 @@ const props = defineProps({
         default: new Date().toLocaleTimeString()
     },
     temperature2m: {
-        type: String,
-        default: ''
+        type: Number,
+        default: 0
     },
     relativeHumidity2m: {
-        type: String,
-        default: ''
+        type: Number,
+        default: 0
     },
     precipitation: {
-        type: String,
-        default: ''
+        type: Number,
+        default: 0
     },
     cloudCover: {
-        type: String,
-        default: ''
+        type: Number,
+        default: 0
     },
     pressureMsl: {
-        type: String,
-        default: ''
+        type: Number,
+        default: 0
     },
     windSpeed10m: {
-        type: String,
-        default: ''
+        type: Number,
+        default: 0
     },
     windDirection10m: {
-        type: String,
-        default: ''
+        type: Number,
+        default: 0
     },
     latitude: {
         type: Number,
@@ -47,7 +47,6 @@ const props = defineProps({
     }
 })
 
-let show = ref(false)
 let pointName = ref('')
 
 const saveChanges = (pointName) => {
@@ -74,13 +73,13 @@ class="card border-0"
                     <p>Направление ветра: </p>
                 </div>
                 <div class="wrapper__values">
-                    <p> {{ props.temperature2m }} °C </p>
-                    <p> {{ props.relativeHumidity2m }} % </p>
-                    <p> {{ props.precipitation }} мм </p>
-                    <p> {{ props.cloudCover }} % </p>
-                    <p> {{ props.pressureMsl }} мм рт. ст. </p>
-                    <p> {{ props.windSpeed10m }} м/с </p>
-                    <p> {{ props.windDirection10m }} ° </p>
+                    <p> {{ +props.temperature2m.toFixed(2) }} °C </p>
+                    <p> {{ +props.relativeHumidity2m.toFixed(2) }} % </p>
+                    <p> {{ +props.precipitation.toFixed(2) }} мм </p>
+                    <p> {{ +props.cloudCover.toFixed(2) }} % </p>
+                    <p> {{ +props.pressureMsl.toFixed(2) }} мм рт. ст. </p>
+                    <p> {{ +props.windSpeed10m.toFixed(2) }} м/с </p>
+                    <p> {{ +props.windDirection10m.toFixed(2) }} ° </p>
                 </div>
 
             </div>
